@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 指定MyBatis使用slf4j -->
+	<settings>
+		<setting name="logImpl" value="SLF4J" />
+	</settings>
+	<typeAliases>
+		<typeAlias alias="Goods" type="com.ln.simplerest.model.Goods"></typeAlias>
+		<typeAlias alias="Order" type="com.ln.simplerest.model.Order"></typeAlias>
+		<typeAlias alias="OrderItem" type="com.ln.simplerest.model.OrderItem"></typeAlias>
+		<typeAlias alias="PageRequest" type="com.ln.simplerest.support.mybatis.data.PageRequest"/>
+	</typeAliases>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="com.ln.simplerest.support.mybatis.DruidDataSourceFactory">
+				<property name="url" value="${jdbc.url}" />
+				<property name="username" value="${jdbc.username}" />
+				<property name="password" value="${jdbc.password}" />
+				<!-- 配置初始化大小、最小、最大 -->
+				<property name="initialSize" value="${jdbc.pool.initialSize}" />
+				<property name="minIdle" value="${jdbc.pool.minIdle}" />
+				<property name="maxActive" value="${jdbc.pool.maxActive}" />
+				<!-- 配置获取连接等待超时的时间 -->
+				<property name="maxWait" value="30000" />
+				<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+				<property name="timeBetweenEvictionRunsMillis" value="60000" />
+				<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+				<property name="minEvictableIdleTimeMillis" value="300000" />
+				<property name="validationQuery" value="select 1" />
+				<property name="testWhileIdle" value="true" />
+				<property name="testOnBorrow" value="false" />
+				<property name="testOnReturn" value="false" />
+				<!-- 打开PSCache，并且指定每个连接上PSCache的大小,如果用Oracle，则把poolPreparedStatements配置为true，MySQL可以配置为false -->
+				<property name="poolPreparedStatements" value="false" />
+				<property name="maxPoolPreparedStatementPerConnectionSize"
+					value="-1" />
+				<property name="filters" value="slf4j" />
+			</dataSource>
+		</environment>
+		<environment id="product">
+			<transactionManager type="JDBC" />
+			<dataSource type="com.ln.simplerest.support.mybatis.DruidDataSourceFactory">
+				<property name="url" value="${jdbc.url}" />
+				<property name="username" value="${jdbc.username}" />
+				<property name="password" value="${jdbc.password}" />
+				<!-- 配置初始化大小、最小、最大 -->
+				<property name="initialSize" value="${jdbc.pool.initialSize}" />
+				<property name="minIdle" value="${jdbc.pool.minIdle}" />
+				<property name="maxActive" value="${jdbc.pool.maxActive}" />
+				<!-- 配置获取连接等待超时的时间 -->
+				<property name="maxWait" value="30000" />
+				<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+				<property name="timeBetweenEvictionRunsMillis" value="60000" />
+				<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+				<property name="minEvictableIdleTimeMillis" value="300000" />
+				<property name="validationQuery" value="select 1" />
+				<property name="testWhileIdle" value="true" />
+				<property name="testOnBorrow" value="false" />
+				<property name="testOnReturn" value="false" />
+				<!-- 打开PSCache，并且指定每个连接上PSCache的大小,如果用Oracle，则把poolPreparedStatements配置为true，MySQL可以配置为false -->
+				<property name="poolPreparedStatements" value="false" />
+				<property name="maxPoolPreparedStatementPerConnectionSize"
+					value="-1" />
+				<property name="filters" value="slf4j" />
+			</dataSource>
+		</environment>
+	</environments>
+	<mappers>
+		<package name="com.ln.simplerest.mapper"/>
+	</mappers>
+</configuration> 

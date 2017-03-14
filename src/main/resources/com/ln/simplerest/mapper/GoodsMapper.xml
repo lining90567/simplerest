@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ln.simplerest.mapper.GoodsMapper">
+	<resultMap id="goodsMap" type="Goods">
+		<id column="goods_id" property="id" />
+		<result column="goods_name" property="name" />
+	</resultMap>
+
+	<select id="listAllGoods" resultMap="goodsMap">
+		SELECT * FROM sr_goods
+	</select>
+
+	<select id="getById" parameterType="String" resultType="Goods">
+		SELECT
+		goods_id AS id,goods_name AS name FROM sr_goods WHERE goods_id=#{id}
+	</select>
+
+	<select id="listPagedGoods" parameterType="PageRequest"
+		resultMap="goodsMap">
+		SELECT * FROM sr_goods
+		<where>
+			<if test="parameters.goodsName != null">
+				goods_name like #{parameters.goodsName}
+			</if>
+		</where>
+		<if test="order != null">
+			ORDER BY ${order}
+		</if>
+		LIMIT #{size} OFFSET #{offset}
+	</select>
+	<select id="countGoods" parameterType="PageRequest" resultType="int">
+		SELECT COUNT(*) FROM sr_goods
+		<where>
+			<if test="parameters.goodsName != null">
+				goods_name like #{parameters.goodsName}
+			</if>
+		</where>
+	</select>
+
+	<insert id="saveGoods" parameterType="Goods" keyProperty="id">
+		<selectKey resultType="String" keyProperty="id" order="BEFORE">
+			SELECT REPLACE(uuid(), '-', '')
+		</selectKey>
+		INSERT INTO sr_goods(goods_id, goods_name) VALUES(#{id}, #{name})
+	</insert>
+
+	<update id="updateGoods" parameterType="Goods">
+		UPDATE sr_goods SET
+		goods_name=#{name} WHERE goods_id=#{id}
+	</update>
+
+	<delete id="removeGoods" parameterType="String">
+		DELETE FROM sr_goods
+		WHERE goods_id=#{id}
+	</delete>
+</mapper>  

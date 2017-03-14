@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ln.simplerest.mapper.OrderItemMapper">
+	<resultMap id="orderItemMap" type="OrderItem">
+		<id column="item_id" property="id" />
+		<result column="quantity" property="quantity" />
+		<association property="goods" column="goods_id" javaType="Goods">
+			<id property="id" column="goods_id" />
+			<result property="name" column="goods_name" />
+		</association>
+	</resultMap>
+
+	<select id="listByOrderId" parameterType="String" resultMap="orderItemMap">
+		SELECT oi.item_id,oi.goods_id,g.goods_name,oi.quantity
+		FROM
+		sr_order_item oi INNER JOIN sr_goods g ON oi.goods_id=g.goods_id
+		WHERE
+		oi.item_id=#{orderId}
+	</select>
+
+	<insert id="saveOrderItems">
+		INSERT INTO sr_order_item(item_id, order_id, goods_id, quantity)
+		VALUES
+		<foreach collection="list" index="index" item="item"
+			separator=",">
+			(#{item.id}, #{item.order.id}, #{item.goods.id},
+			#{item.quantity})
+		</foreach>
+	</insert>
+
+	<delete id="removeByOrderId" parameterType="String">
+		DELETE FROM
+		sr_order_item
+		WHERE order_id=#{orderId}
+	</delete>
+</mapper>  

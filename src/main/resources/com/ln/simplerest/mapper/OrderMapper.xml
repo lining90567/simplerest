@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ln.simplerest.mapper.OrderMapper">
+	<resultMap id="orderMap" type="Order">
+		<id property="id" column="order_id" />
+		<result property="date" column="order_date" javaType="java.sql.Date"
+			jdbcType="DATE" />
+		<collection property="items" ofType="OrderItem">
+			<id property="id" column="item_id" />
+			<result property="goods.id" column="goods_id" />
+			<result property="quantity" column="quantity" />
+			<association property="order" column="order_id" javaType="Order">
+				<id property="id" column="order_id" />
+			</association>
+			<association property="goods" column="goods_id" javaType="Goods">
+				<id property="id" column="goods_id" />
+				<result property="name" column="goods_name" />
+			</association>
+		</collection>
+	</resultMap>
+
+	<select id="listAllOrder" resultType="Order">
+		SELECT order_id AS
+		id,order_date AS date FROM sr_order
+	</select>
+
+	<select id="getById" parameterType="String" resultMap="orderMap">
+		SELECT
+		o.order_id,o.order_date,oi.item_id,oi.goods_id,oi.quantity,g.goods_name
+		FROM sr_order o INNER JOIN sr_order_item oi ON
+		o.order_id=oi.order_id
+		INNER JOIN sr_goods g ON oi.goods_id=g.goods_id
+		WHERE o.order_id=#{id}
+	</select>
+
+	<insert id="saveOrder" parameterType="Order" keyProperty="id">
+		<selectKey resultType="String" keyProperty="id" order="BEFORE">
+			SELECT REPLACE(uuid(), '-', '')
+		</selectKey>
+		INSERT INTO sr_order(order_id, order_date) VALUES(#{id}, #{date})
+	</insert>
+
+	<delete id="removeOrder" parameterType="String">
+		DELETE FROM sr_order
+		WHERE order_id=#{id}
+	</delete>
+</mapper>  
